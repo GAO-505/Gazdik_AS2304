@@ -199,9 +199,7 @@ void menu() {
 }
 
 int main() {
-
     setlocale(LC_ALL, "RU");
     menu();
-
     return 0;
 }
