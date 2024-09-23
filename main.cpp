@@ -121,7 +121,6 @@ void FileLoad(Pipe & pipe, CompressorStation & station) {
 
 // Главное меню программы
 void menu() {
-    
     Pipe pipe;
     CompressorStation station;
     bool pipeExists = false;
@@ -200,7 +199,9 @@ void menu() {
 }
 
 int main() {
+
     setlocale(LC_ALL, "RU");
     menu();
+
     return 0;
 }
