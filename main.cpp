@@ -100,43 +100,41 @@ void get_data(CompressorStation &station) { // Вывод данных
 }
 
 void StartWorkShop(CompressorStation & station) {
+    cout << "Работает " << station.active_workshops << " цехов из " << station.total_workshops << endl;
     int count;
-    do {
-        cout << "Сколько цехов запустить? (>0): ";
-        count = GetNumInt();
-    } while (count < 1);
+    int delta;
+    delta = station.total_workshops - station.active_workshops;
 
-    if (station.active_workshops == station.total_workshops) {
+    if (delta != 0) {
+        do {
+            cout << "Возможно запустить " << delta << " цехов. Введите число: ";
+            count = GetNumInt();
+        } while (count < 1 || count > delta);
+        
+        station.active_workshops += count;
+        cout << count << " цехов начали работу. Теперь работают" << station.active_workshops << " цехов" << endl;
+    }
+    else {
         cout << "Все цеха уже работают" << endl;
     }
-    else if (station.active_workshops + count > station.total_workshops) {
-        station.active_workshops = station.total_workshops;
-        cout << "Запуск всех цехов" << endl;
-    }
-    else if (station.active_workshops + count < station.total_workshops) {
-        station.active_workshops += count;
-        cout << count << " цехов начали работу" << endl;
-    }
+
 
 }
 void StopWorkShop(CompressorStation & station) {
+    cout << "Работает " << station.active_workshops << " цехов из " << station.total_workshops << endl;
     int count;
-    do {
-        cout << "Сколько цехов остановить? (>0): ";
-        count = GetNumInt();
-    } while (count < 1);
 
-    if (station.active_workshops == 0) {
-        cout << "Все цеха уже остановлены" << endl;
-    }
-    else if (station.active_workshops - count > 0) {
+    if (station.active_workshops != 0) {
+        do {
+            cout << "Возможно остановить " << station.active_workshops << " цехов. Введите число: ";
+            count = GetNumInt();
+        } while (count < 1 || count > station.active_workshops);
+
         station.active_workshops -= count;
         cout << count << " цехов остановлено" << endl;
-
     }
-    else if (station.active_workshops - count <= 0) {
-        station.active_workshops = 0;
-        cout << "Остановка всех цехов" << endl;
+    else {
+        cout << "Все цеха уже остановлены" << endl;
     }
 }
 
