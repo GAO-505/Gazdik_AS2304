@@ -1,31 +1,69 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
+
 
 using namespace std;
 
+int GetNumInt() {
+    int num;
+    while (true) {
+        cin >> num;
+        cout << "\n";
+        if (cin.fail() || num <= 0) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Ошибка ввода. Введите положительное целое число: ";
+        }
+        else {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return num;
+        }
+    }
+}
+float GetNumFloat() {
+    float num;
+    while (true) {
+        cin >> num;
+        cout << "\n";
+        if (cin.fail() || num <= 0) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Ошибка ввода. Введите положительное число: ";
+        }
+        else {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return num;
+        }
+    }
+}
+
 struct Pipe {
     string label; // Кил отметка
-    int length; // Длина трубы
-    short diametr; // Диаметр трубы
+    float length; // Длина трубы
+    int diametr; // Диаметр трубы
     bool repair; // В ремонте или нет
 
     void set_data() { //Ввод данных
         cout << "Введите название трубы(Англ): ";
         cin >> label;
         cout << "Введите длину трубы: ";
-        cin >> length;
+        length = GetNumFloat();
         cout << "Введите диаметр трубы: ";
-        cin >> diametr;
-        cout << "Работает/Ремонтируется (Ввести 1 или 0): ";
-        cin >> repair;
+        diametr = GetNumInt();
+        repair = true;
     }
     void get_data() { // Вывод данных
         cout << "\nНазвание трубы: " << label << endl;
         cout << "Длина трубы: " << length << endl;
         cout << "Диаметр трубы: " << diametr << endl;
-        cout << "Состояние трубы: " << repair << endl;
+        if (repair) {
+            cout << "Состояние трубы: Работает" << endl;
+        }
+        else {
+            cout << "Состояние трубы: В ремонте" << endl;
+        }
+        
     }
     void switch_status() { // Смена статуса ремонта
         repair = !repair;
@@ -43,13 +81,13 @@ struct CompressorStation {
         cout << "Введите название КС (Англ): ";
         cin >> name;
         cout << "Введите кол-во цехов КС: ";
-        cin >> total_workshops;
+        total_workshops = GetNumInt();
         do {//проверка на реальность
             cout << "Введите кол-во активных цехов КС (<= общего кол-ва): ";
-            cin >> active_workshops;
+            active_workshops = GetNumInt();
         } while (active_workshops > total_workshops);
         cout << "Эффективность КС (число): ";
-        cin >> efficiency;
+        efficiency = GetNumFloat();
     }
     void get_data() { // Вывод данных
         cout << "\nНазвание КС: " << name << endl;
@@ -61,7 +99,7 @@ struct CompressorStation {
         int count;
         do { 
             cout << "Сколько цехов запустить? (>0): ";
-            cin >> count;
+            count = GetNumInt();
         } while (count < 1);
 
         if (active_workshops == total_workshops) {
@@ -81,7 +119,7 @@ struct CompressorStation {
         int count;
         do {
             cout << "Сколько цехов остановить? (>0): ";
-            cin >> count;
+            count = GetNumInt();
         } while (count < 1);
 
         if (active_workshops == 0) {
@@ -106,7 +144,6 @@ void FileWrite(Pipe & pipe, CompressorStation & station) {
         File << station.name << " " << station.total_workshops << " " << station.active_workshops << " " << station.efficiency << "\n";
         File.close();
     }
-    
     cout << "Data good";
 }
 
@@ -135,11 +172,11 @@ void menu() {
         cout << "5. Редактировать станцию (запуск/останов цеха)\n";
         cout << "6. Сохранить данные\n";
         cout << "7. Загрузить данные\n";
-        cout << "0. Выход\n";
-        cout << "Выберите действие: ";
+        cout << "8. Выход\n";
 
         int choice;
-        cin >> choice;
+        cout << "Выберите действие (введите число): ";
+        choice = GetNumInt();
         cout << "\n";
 
         switch (choice) {
@@ -189,11 +226,12 @@ void menu() {
             pipeExists = true;
             stationExists = true;
             break;
-        case 0:
+        case 8:
             cout << "Выход из программы.\n";
             return;
         default:
             cout << "Команды не существует. Попробуйте снова.\n";
+            break;
         }
     }
 }
