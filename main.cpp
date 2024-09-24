@@ -99,43 +99,42 @@ void get_data(CompressorStation &station) { // Вывод данных
     cout << "Эффективность КС: " << station.efficiency << endl;
 }
 
-void StartWorkShop(CompressorStation & station) {
+void StartWorkShop(CompressorStation& station) {
     cout << "Работает " << station.active_workshops << " цехов из " << station.total_workshops << endl;
     int count;
     int delta;
     delta = station.total_workshops - station.active_workshops;
 
-    if (delta != 0) {
-        do {
-            cout << "Возможно запустить " << delta << " цехов. Введите число: ";
-            count = GetNumInt();
-        } while (count < 1 || count > delta);
-        
-        station.active_workshops += count;
-        cout << count << " цехов начали работу. Теперь работают" << station.active_workshops << " цехов" << endl;
-    }
-    else {
+    if (delta == 0)
+    {
         cout << "Все цеха уже работают" << endl;
+        return;
     }
 
+    do {
+        cout << "Возможно запустить " << delta << " цехов. Введите число: ";
+        count = GetNumInt();
+    } while (count < 1 || count > delta);
 
+    station.active_workshops += count;
+    cout << count << " цехов начали работу. Теперь работают" << station.active_workshops << " цехов" << endl;
 }
+
 void StopWorkShop(CompressorStation & station) {
     cout << "Работает " << station.active_workshops << " цехов из " << station.total_workshops << endl;
     int count;
 
-    if (station.active_workshops != 0) {
-        do {
-            cout << "Возможно остановить " << station.active_workshops << " цехов. Введите число: ";
-            count = GetNumInt();
-        } while (count < 1 || count > station.active_workshops);
-
-        station.active_workshops -= count;
-        cout << count << " цехов остановлено" << endl;
-    }
-    else {
+    if (station.active_workshops == 0) {
         cout << "Все цеха уже остановлены" << endl;
+        return;
     }
+    do {
+        cout << "Возможно остановить " << station.active_workshops << " цехов. Введите число: ";
+        count = GetNumInt();
+    } while (count < 1 || count > station.active_workshops);
+
+    station.active_workshops -= count;
+    cout << count << " цехов остановлено" << endl;
 }
 
 void FileWrite(Pipe & pipe, CompressorStation & station) {
