@@ -16,11 +16,11 @@ int GetNumInt() {
             cout << "Ошибка ввода. Введите положительное целое число: ";
         }
         else {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return num;
         }
     }
 }
+
 float GetNumFloat() {
     float num;
     while (true) {
@@ -32,7 +32,6 @@ float GetNumFloat() {
             cout << "Ошибка ввода. Введите положительное число: ";
         }
         else {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return num;
         }
     }
@@ -43,99 +42,103 @@ struct Pipe {
     float length; // Длина трубы
     int diametr; // Диаметр трубы
     bool repair; // В ремонте или нет
-
-    void set_data() { //Ввод данных
-        cout << "Введите название трубы(Англ): ";
-        cin >> label;
-        cout << "Введите длину трубы: ";
-        length = GetNumFloat();
-        cout << "Введите диаметр трубы: ";
-        diametr = GetNumInt();
-        repair = true;
-    }
-    void get_data() { // Вывод данных
-        cout << "\nНазвание трубы: " << label << endl;
-        cout << "Длина трубы: " << length << endl;
-        cout << "Диаметр трубы: " << diametr << endl;
-        if (repair) {
-            cout << "Состояние трубы: Работает" << endl;
-        }
-        else {
-            cout << "Состояние трубы: В ремонте" << endl;
-        }
-        
-    }
-    void switch_status() { // Смена статуса ремонта
-        repair = !repair;
-        cout << "Состояние трубы изменено!" << endl;
-    }
 };
+
+void set_data(Pipe &pipe) { //Ввод данных
+    cout << "Введите название трубы(Англ): ";
+    cin >> pipe.label;
+    cout << "Введите длину трубы: ";
+    pipe.length = GetNumFloat();
+    cout << "Введите диаметр трубы: ";
+    pipe.diametr = GetNumInt();
+    pipe.repair = true;
+}
+
+void get_data(Pipe& pipe) { // Вывод данных
+    cout << "\nНазвание трубы: " << pipe.label << endl;
+    cout << "Длина трубы: " << pipe.length << endl;
+    cout << "Диаметр трубы: " << pipe.diametr << endl;
+    if (pipe.repair) {
+        cout << "Состояние трубы: Работает" << endl;
+    }
+    else {
+        cout << "Состояние трубы: В ремонте" << endl;
+    }
+
+}
+
+void switch_status(Pipe& pipe) { // Смена статуса ремонта
+    pipe.repair = !pipe.repair;
+    cout << "Состояние трубы изменено!" << endl;
+}
 
 struct CompressorStation {
     string name; // Название станции
     int total_workshops; // Общее кол-во цехов
     int active_workshops; // кол-во Активных цехов
     float efficiency; // Эффективность
-
-    void set_data() { // Ввод данных
-        cout << "Введите название КС (Англ): ";
-        cin >> name;
-        cout << "Введите кол-во цехов КС: ";
-        total_workshops = GetNumInt();
-        do {//проверка на реальность
-            cout << "Введите кол-во активных цехов КС (<= общего кол-ва): ";
-            active_workshops = GetNumInt();
-        } while (active_workshops > total_workshops);
-        cout << "Эффективность КС (число): ";
-        efficiency = GetNumFloat();
-    }
-    void get_data() { // Вывод данных
-        cout << "\nНазвание КС: " << name << endl;
-        cout << "Кол-во цехов КС: " << total_workshops << endl;
-        cout << "Кол-во активных цехов КС: " << active_workshops << endl;
-        cout << "Эффективность КС: " << efficiency << endl;
-    }
-    void StartWorkShop() {
-        int count;
-        do { 
-            cout << "Сколько цехов запустить? (>0): ";
-            count = GetNumInt();
-        } while (count < 1);
-
-        if (active_workshops == total_workshops) {
-            cout << "Все цеха уже работают" << endl;
-        }
-        else if (active_workshops + count > total_workshops) {
-            active_workshops = total_workshops;
-            cout << "Запуск всех цехов" << endl;
-        }
-        else if (active_workshops + count < total_workshops) {
-            active_workshops += count;
-            cout << count << " цехов начали работу" << endl;
-        }
-        
-    }
-    void StopWorkShop() {
-        int count;
-        do {
-            cout << "Сколько цехов остановить? (>0): ";
-            count = GetNumInt();
-        } while (count < 1);
-
-        if (active_workshops == 0) {
-            cout << "Все цеха уже остановлены" << endl;
-        }
-        else if (active_workshops - count > 0) {
-            active_workshops -= count;
-            cout << count << " цехов остановлено" << endl;
-            
-        }
-        else if (active_workshops - count <= 0) {
-            active_workshops = 0;
-            cout << "Остановка всех цехов" << endl;
-        }
-    }
 };
+
+void set_data(CompressorStation &station) { // Ввод данных
+    cout << "Введите название КС (Англ): ";
+    cin >> station.name;
+    cout << "Введите кол-во цехов КС: ";
+    station.total_workshops = GetNumInt();
+    do {//проверка на реальность
+        cout << "Введите кол-во активных цехов КС (<= общего кол-ва): ";
+        station.active_workshops = GetNumInt();
+    } while (station.active_workshops > station.total_workshops);
+    cout << "Эффективность КС (число): ";
+    station.efficiency = GetNumFloat();
+}
+
+void get_data(CompressorStation &station) { // Вывод данных
+    cout << "\nНазвание КС: " << station.name << endl;
+    cout << "Кол-во цехов КС: " << station.total_workshops << endl;
+    cout << "Кол-во активных цехов КС: " << station.active_workshops << endl;
+    cout << "Эффективность КС: " << station.efficiency << endl;
+}
+
+void StartWorkShop(CompressorStation & station) {
+    int count;
+    do {
+        cout << "Сколько цехов запустить? (>0): ";
+        count = GetNumInt();
+    } while (count < 1);
+
+    if (station.active_workshops == station.total_workshops) {
+        cout << "Все цеха уже работают" << endl;
+    }
+    else if (station.active_workshops + count > station.total_workshops) {
+        station.active_workshops = station.total_workshops;
+        cout << "Запуск всех цехов" << endl;
+    }
+    else if (station.active_workshops + count < station.total_workshops) {
+        station.active_workshops += count;
+        cout << count << " цехов начали работу" << endl;
+    }
+
+}
+void StopWorkShop(CompressorStation & station) {
+    int count;
+    do {
+        cout << "Сколько цехов остановить? (>0): ";
+        count = GetNumInt();
+    } while (count < 1);
+
+    if (station.active_workshops == 0) {
+        cout << "Все цеха уже остановлены" << endl;
+    }
+    else if (station.active_workshops - count > 0) {
+        station.active_workshops -= count;
+        cout << count << " цехов остановлено" << endl;
+
+    }
+    else if (station.active_workshops - count <= 0) {
+        station.active_workshops = 0;
+        cout << "Остановка всех цехов" << endl;
+    }
+}
 
 void FileWrite(Pipe & pipe, CompressorStation & station) {
     ofstream File("Data.txt", ios_base::out);
@@ -156,7 +159,6 @@ void FileLoad(Pipe & pipe, CompressorStation & station) {
     }
 }
 
-// Главное меню программы
 void menu() {
     Pipe pipe;
     CompressorStation station;
@@ -181,45 +183,54 @@ void menu() {
 
         switch (choice) {
         case 1:
-            pipe.set_data();
+            set_data(pipe);
             pipeExists = true;
             break;
         case 2:
-            station.set_data();
+            set_data(station);
             stationExists = true;
             break;
         case 3:
-            if (pipeExists) pipe.get_data();
-            else cout << "Труба не добавлена.\n";
-            if (stationExists) station.get_data();
-            else cout << "Станция не добавлена.\n";
+            if (pipeExists) 
+                get_data(pipe);
+            else
+                cout << "Труба не добавлена.\n";
+            if (stationExists) 
+                get_data(station);
+            else
+                cout << "Станция не добавлена.\n";
             break;
         case 4:
-            if (pipeExists) pipe.switch_status();
-            else cout << "Труба не добавлена.\n";
+            if (pipeExists) 
+                switch_status(pipe);
+            else 
+                cout << "Труба не добавлена.\n";
             break;
         case 5:
             if (stationExists) {
                 cout << "1. Запустить цех\n2. Остановить цех\n";
                 int action;
-                cin >> action;
+                action = GetNumInt();
                 switch (action){
                 case 1:
-                    station.StartWorkShop();
+                    StartWorkShop(station);
                     break;
                 case 2:
-                    station.StopWorkShop();
+                    StopWorkShop(station);
                     break;
                 default:
                     cout << "Команды не существует";
                     break;
                 }
             }
-            else cout << "Станция не добавлена.\n";
+            else
+                cout << "Станция не добавлена.\n";
             break;
         case 6:
-            if (pipeExists && stationExists) FileWrite(pipe, station);
-            else cout << "Данные для сохранения неполные.\n";
+            if (pipeExists && stationExists)
+                FileWrite(pipe, station);
+            else 
+                cout << "Данные для сохранения неполные.\n";
             break;
         case 7:
             FileLoad(pipe, station);
