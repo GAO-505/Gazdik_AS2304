@@ -251,9 +251,15 @@ void menu() {
             stationExists = true;
             break;
         case 3:
-            //ОТРЕДАЧИТЬ НОРМАЛЬНО ЕСТЬ ИЛИ НЕТУ
+            if (pipeExists)
                 get_data(pipe);
+            else
+                cout << "Нет трубы.\n";
+            if (stationExists)
                 get_data(station);
+            else
+                cout << "Нет станции.\n";
+            break;
         case 4:
             if (pipeExists) 
                 switch_status(pipe);
@@ -285,6 +291,12 @@ void menu() {
             break;
         case 7:
             FileLoadAll(pipe, station);
+            if (pipe.length < 0) {
+                pipeExists = false;
+            } else pipeExists = true;
+            if (station.total_workshops < 0) {
+                stationExists = false;
+            } else stationExists = true;
             break;
         case 8:
             cout << "Выход из программы.\n";
