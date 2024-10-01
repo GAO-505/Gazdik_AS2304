@@ -1,2 +1,6 @@
-pipe1 1234567 245 1
-esaghgsrh 124 2 5
+data Pipe:
+hgfjhf
+6457 869 0
+data Station:
+egweg
+14 1 24

@@ -137,24 +137,87 @@ void StopWorkShop(CompressorStation & station) {
     cout << count << " цехов остановлено" << endl;
 }
 
-void FileWrite(Pipe & pipe, CompressorStation & station) {
-    ofstream File("Data.txt", ios_base::out);
-    if (File.is_open()) {
-        File << pipe.label << " " << pipe.length << " " << pipe.diametr << " " << pipe.repair << "\n";
-        File << station.name << " " << station.total_workshops << " " << station.active_workshops << " " << station.efficiency << "\n";
-        File.close();
-    }
-    cout << "Data good";
+
+void FileWritePipe(const Pipe& pipe, ofstream& out)
+{
+    out << "data Pipe:" << endl;
+    out << pipe.label << endl;
+    out << pipe.length << " " << pipe.diametr << " " << pipe.repair << endl;
 }
 
-void FileLoad(Pipe & pipe, CompressorStation & station) {
-    ifstream File("Data.txt");
-    if (File.is_open()) {
-        File >> pipe.label >> pipe.length >> pipe.diametr >> pipe.repair;
-        File >> station.name >> station.total_workshops >> station.active_workshops >> station.efficiency;
-        File.close();
+void FileWriteStation(const CompressorStation& station, ofstream& out)
+{
+    out << "data Station:" << endl;
+    out << station.name << endl;
+    out << station.total_workshops << " " << station.active_workshops << " " << station.efficiency;
+}
+
+void FileLoadPipe(Pipe& pipe, ifstream& in) {
+    if (in.is_open()) {
+        getline(in >> ws, pipe.label);
+        in >> pipe.length >> pipe.diametr >> pipe.repair;
+        in.ignore();
+        cout << "Данные из файла о трубе записаны" << endl;
     }
 }
+
+void FileLoadStation(CompressorStation& station, ifstream& in){
+    if (in.is_open()) {
+        getline(in >> ws, station.name);
+        in >> station.total_workshops >> station.active_workshops >> station.efficiency;
+        in.ignore();
+        cout << "Данные из файла о КС записаны" << endl; 
+    }
+}
+
+
+void FileWriteAll(const Pipe& pipe, const CompressorStation& station) {
+    ofstream out;
+    out.open("Data.txt");
+    if (out.is_open())
+    {
+        if (pipe.label.empty() && station.name.empty()) {
+            cout << "У вас нет данных для записи!" << endl;
+        }
+        else if (!pipe.label.empty() && !station.name.empty()) {
+            FileWritePipe(pipe, out);
+            FileWriteStation(station, out);
+            cout << "Данные о КС и трубе записаны!" << endl;
+        }
+        if (!pipe.label.empty() && station.name.empty()) {
+            FileWritePipe(pipe, out);
+            cout << "Данные о трубе записаны!" << endl;
+        }
+        if (pipe.label.empty() && !station.name.empty()) {
+            FileWriteStation(station, out);
+            cout << "Данные о КС записаны!" << endl;
+        }
+
+    }
+    out.close();
+}
+
+void FileLoadAll(Pipe& pipe, CompressorStation& station) {
+    ifstream in("Data.txt");
+    if (!in.is_open()) 
+    {
+        cout << "File not found" << endl;
+        return;
+    }
+
+    string findle;
+    while (getline(in >> ws, findle)) {
+        if (findle == "data Pipe:") {
+            FileLoadPipe(pipe, in);
+        }
+        if (findle == "data Station:") {
+            FileLoadStation(station, in);
+        }
+       
+    }
+    in.close();
+}
+
 
 void menu() {
     Pipe pipe;
@@ -188,15 +251,9 @@ void menu() {
             stationExists = true;
             break;
         case 3:
-            if (pipeExists) 
+            //ОТРЕДАЧИТЬ НОРМАЛЬНО ЕСТЬ ИЛИ НЕТУ
                 get_data(pipe);
-            else
-                cout << "Труба не добавлена.\n";
-            if (stationExists) 
                 get_data(station);
-            else
-                cout << "Станция не добавлена.\n";
-            break;
         case 4:
             if (pipeExists) 
                 switch_status(pipe);
@@ -224,15 +281,10 @@ void menu() {
                 cout << "Станция не добавлена.\n";
             break;
         case 6:
-            if (pipeExists && stationExists)
-                FileWrite(pipe, station);
-            else 
-                cout << "Данные для сохранения неполные.\n";
+            FileWriteAll(pipe, station);
             break;
         case 7:
-            FileLoad(pipe, station);
-            pipeExists = true;
-            stationExists = true;
+            FileLoadAll(pipe, station);
             break;
         case 8:
             cout << "Выход из программы.\n";
