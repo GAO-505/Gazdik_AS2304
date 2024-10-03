@@ -55,6 +55,10 @@ void set_data(Pipe &pipe) { //Ввод данных
 }
 
 void get_data(Pipe& pipe) { // Вывод данных
+    if (pipe.length <= 0) {
+        cout << "Трубы нет";
+        return;
+    }
     cout << "\nНазвание трубы: " << pipe.label << endl;
     cout << "Длина трубы: " << pipe.length << endl;
     cout << "Диаметр трубы: " << pipe.diametr << endl;
@@ -93,6 +97,10 @@ void set_data(CompressorStation &station) { // Ввод данных
 }
 
 void get_data(CompressorStation &station) { // Вывод данных
+    if (station.total_workshops <= 0) {
+        cout << "Станции нет";
+        return;
+    }
     cout << "\nНазвание КС: " << station.name << endl;
     cout << "Кол-во цехов КС: " << station.total_workshops << endl;
     cout << "Кол-во активных цехов КС: " << station.active_workshops << endl;
@@ -204,7 +212,8 @@ void FileLoadAll(Pipe& pipe, CompressorStation& station) {
         cout << "File not found" << endl;
         return;
     }
-
+    pipe = {};
+    station = {};
     string findle;
     while (getline(in >> ws, findle)) {
         if (findle == "data Pipe:") {
