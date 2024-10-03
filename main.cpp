@@ -10,7 +10,7 @@ int GetNumInt() {
     while (true) {
         cin >> num;
         cout << "\n";
-        if (cin.fail() || num <= 0) {
+        if (cin.fail() || num <= 0 || cin.peek() != '\n') {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Ошибка ввода. Введите положительное целое число: ";
@@ -46,7 +46,7 @@ struct Pipe {
 
 void set_data(Pipe &pipe) { //Ввод данных
     cout << "Введите название трубы(Англ): ";
-    cin >> pipe.label;
+    getline(cin >> ws, pipe.label);
     cout << "Введите длину трубы: ";
     pipe.length = GetNumFloat();
     cout << "Введите диаметр трубы: ";
@@ -81,7 +81,7 @@ struct CompressorStation {
 
 void set_data(CompressorStation &station) { // Ввод данных
     cout << "Введите название КС (Англ): ";
-    cin >> station.name;
+    getline(cin >> ws, station.name);
     cout << "Введите кол-во цехов КС: ";
     station.total_workshops = GetNumInt();
     do {//проверка на реальность
