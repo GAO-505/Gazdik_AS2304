@@ -54,15 +54,15 @@ void set_data(Pipe &pipe) { //Ввод данных
     pipe.repair = true;
 }
 
-void get_data(Pipe& pipe) { // Вывод данных
+void get_data(Pipe& pipe) { // Вывод данных//!!!!!!!!!!!!!!!!!!
     if (pipe.length <= 0) {
-        cout << "Трубы нет";
+        cout << "Трубы нет\n";
         return;
     }
     cout << "\nНазвание трубы: " << pipe.label << endl;
     cout << "Длина трубы: " << pipe.length << endl;
     cout << "Диаметр трубы: " << pipe.diametr << endl;
-    if (pipe.repair) {
+    if (pipe.repair) {//!!!!!!!!!!!!!!
         cout << "Состояние трубы: Работает" << endl;
     }
     else {
@@ -96,9 +96,9 @@ void set_data(CompressorStation &station) { // Ввод данных
     station.efficiency = GetNumFloat();
 }
 
-void get_data(CompressorStation &station) { // Вывод данных
+void get_data(CompressorStation &station) { // Вывод данных//!!!!!!!!!!!
     if (station.total_workshops <= 0) {
-        cout << "Станции нет";
+        cout << "Станции нет\n";
         return;
     }
     cout << "\nНазвание КС: " << station.name << endl;
@@ -164,7 +164,6 @@ void FileLoadPipe(Pipe& pipe, ifstream& in) {
     if (in.is_open()) {
         getline(in >> ws, pipe.label);
         in >> pipe.length >> pipe.diametr >> pipe.repair;
-        in.ignore();
         cout << "Данные из файла о трубе записаны" << endl;
     }
 }
@@ -173,30 +172,25 @@ void FileLoadStation(CompressorStation& station, ifstream& in){
     if (in.is_open()) {
         getline(in >> ws, station.name);
         in >> station.total_workshops >> station.active_workshops >> station.efficiency;
-        in.ignore();
         cout << "Данные из файла о КС записаны" << endl; 
     }
 }
 
 
 void FileWriteAll(const Pipe& pipe, const CompressorStation& station) {
+    if (pipe.label.empty() && station.name.empty()) {
+        cout << "У вас нет данных для записи!" << endl;
+        return;
+    }
     ofstream out;
     out.open("Data.txt");
     if (out.is_open())
     {
-        if (pipe.label.empty() && station.name.empty()) {
-            cout << "У вас нет данных для записи!" << endl;
-        }
-        else if (!pipe.label.empty() && !station.name.empty()) {
-            FileWritePipe(pipe, out);
-            FileWriteStation(station, out);
-            cout << "Данные о КС и трубе записаны!" << endl;
-        }
-        if (!pipe.label.empty() && station.name.empty()) {
+        if (!pipe.label.empty()) {
             FileWritePipe(pipe, out);
             cout << "Данные о трубе записаны!" << endl;
         }
-        if (pipe.label.empty() && !station.name.empty()) {
+        if (!station.name.empty()) {
             FileWriteStation(station, out);
             cout << "Данные о КС записаны!" << endl;
         }
